@@ -4,7 +4,9 @@ import {ObjectiveContainerComponent} from './objective-container/objective-conta
 import { CommonModule } from '@angular/common';
 
 const routes: Routes = [
-  { path: '', component: ObjectiveContainerComponent }
+  { path: '', component: ObjectiveContainerComponent }, // temporary
+  { path: 'home', component: ObjectiveContainerComponent },
+  { path: 'objectives', component: ObjectiveContainerComponent }
 ];
 
 @NgModule({

@@ -7,15 +7,24 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-objective-container',
-  imports: [ MatCardModule, MatDividerModule, MatChipsModule, MatIconModule, MatButtonModule],
+  imports: [ MatCardModule, MatDividerModule, MatChipsModule, MatIconModule, MatButtonModule, MatExpansionModule],
   templateUrl: './objective-container.component.html',
   styleUrl: './objective-container.component.scss'
 })
 export class ObjectiveContainerComponent {
-  // receive all objectives, separated by periodType and show
+  
+  periodTypeList : string[] = Object.values(PeriodType)
+
+  getObjectiveListByPeriod(periodKey : string) {
+    return this.objectiveItemList.filter(item => item.periodType == periodKey)
+  }
+
+
+  // Dummy data
   objectiveItemList: ObjectiveItem[] = [
     {
       id: 1,
@@ -47,7 +56,8 @@ export class ObjectiveContainerComponent {
       id: 5,
       periodType: PeriodType.weekly,
       description: 'Comer pizza',
-      objectiveCellList: this.createNumberOfCellInList(4)
+      objectiveCellList: this.createNumberOfCellInList(4),
+      isReversible: true
     },
     {
       id: 6,
@@ -69,22 +79,6 @@ export class ObjectiveContainerComponent {
       objectiveCellList: this.createNumberOfCellInList(4)
     }
   ];
-
-  getDailyObjectiveList() {
-    return this.objectiveItemList.filter(item => item.periodType == PeriodType.daily)
-  }
-
-  getWeeklyObjectiveList() {
-    return this.objectiveItemList.filter(item => item.periodType == PeriodType.weekly)
-  }
-
-  getMonthlyObjectiveList() {
-    return this.objectiveItemList.filter(item => item.periodType == PeriodType.monthly)
-  }
-
-  getYearlyObjectiveList() {
-    return this.objectiveItemList.filter(item => item.periodType == PeriodType.yearly)
-  }
 
   createNumberOfCellInList(size: number) : ObjectiveCell[] {
     let list = [];

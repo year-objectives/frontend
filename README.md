@@ -1,27 +1,63 @@
-# Frontend
+# Objectives App
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.2.
+## Pages
 
-## Development server
+### Login Page
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Entry point for the application, where the user can log in, reset password or register a new user.
 
-## Code scaffolding
+Components:
+- Username/email field
+- Password field
+- "Forgot password" button
+- "Register" button
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Register user page
+Components:
+- Username/email field
+- Password field
+- Confirm password field
+- Conclude button
+- Cancel/return button
 
-## Build
+### Home/Objectives pages
+Shows the the current objectives for the current time period of each "frequency" group. Allow creation and removal of a objective.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Components:
+- List of objectives for each frequency type
+- "Add objective" button
+- "Remove objective" button
 
-## Running unit tests
+## Model
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Objective
 
-## Running end-to-end tests
+#### Type
+    Daily
+    Weekly
+    Monthly
+    Yearly
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+#### Description
+    Title of the objective
 
-## Further help
+#### ObjectiveCells
+    List of objects with the size of the amount of times this objective is expected to occur in the respective interval.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+#### Reversible
+    If checks can be reversible.
+
+#### Timestamp of when was concluded(?)
+
+### ObjectiveCell
+#### Done
+    Boolean for when this cell is checked/done.
+
+#### Timestamp
+    Timestamp for when the cell was checked/done last time.
+
+## General development information
+
+- Mobile first
+- Week definition: Monday -> Sunday
+- Recurrences flag to keep track of the amount of times the objective was concluded beyond expected amount.

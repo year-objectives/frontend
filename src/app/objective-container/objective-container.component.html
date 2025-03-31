@@ -1,95 +1,38 @@
-<div class="objectives-container">
-    <div>Daily Objectives</div>
-    <mat-divider></mat-divider>
-    @for (item of getDailyObjectiveList(); track $index) {
-        <mat-card appearance="outlined">
-            <mat-card-title>
-                {{ item.description }}
-                @if (item.isReversible) {
-                    <mat-icon>cached</mat-icon>
-                }
-            </mat-card-title>
-            <mat-card-content>
-                <div class="button-row">
-                    @for (innerItem of item.objectiveCellList; track $index) {
-                        <button class="objective-cell" mat-raised-button (click)="handleCellClick(innerItem)">
-                            <mat-icon>{{ innerItem.isChecked ? "done" : "remove"}}</mat-icon>
-                        </button>
-                    }
-                </div>
-            </mat-card-content>
-        </mat-card>
+<mat-accordion multi>
+    @for (periodType of periodTypeList; track $index) {
+        @let objectiveList = getObjectiveListByPeriod(periodType);
+        <mat-expansion-panel [expanded]=$first [disabled]="objectiveList.length == 0" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    {{ periodType }}
+                </mat-panel-title>
+                <mat-panel-description>
+                    <div class="objectives-count">{{ objectiveList.length }}</div>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            @for (item of objectiveList; track $index) {
+                <mat-card appearance="outlined">
+                    <mat-card-header>
+                        <mat-card-title-group>
+                            <mat-card-subtitle>
+                                {{ item.description }}
+                            </mat-card-subtitle>
+                            @if (item.isReversible) {
+                                <mat-icon>cached</mat-icon>
+                            }
+                        </mat-card-title-group>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="button-row">
+                            @for (innerItem of item.objectiveCellList; track $index) {
+                                <button class="objective-cell" mat-raised-button (click)="handleCellClick(innerItem)">
+                                    <mat-icon>{{ innerItem.isChecked ? "done" : "remove"}}</mat-icon>
+                                </button>
+                            }
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            }
+        </mat-expansion-panel>
     }
-</div>
-<div class="objectives-container">
-    <div>Weekly Objectives</div>
-    <mat-divider></mat-divider>
-    @for (item of getWeeklyObjectiveList(); track $index) {
-        <mat-card appearance="outlined">
-            <mat-card-title>
-                {{ item.description }}
-                @if (item.isReversible) {
-                    <mat-icon>cycle</mat-icon>
-                }
-            </mat-card-title>
-            <mat-card-content>
-                <div class="button-row">
-                    @for (innerItem of item.objectiveCellList; track $index) {
-                        <button class="objective-cell" mat-raised-button (click)="handleCellClick(innerItem)">
-                            <mat-icon>{{ innerItem.isChecked ? "done" : "remove"}}</mat-icon>
-                        </button>
-                    }
-                </div>
-            </mat-card-content>
-        </mat-card>
-    }
-</div>
-<div class="objectives-container">
-    <div>Monthly Objectives</div>
-    <mat-divider></mat-divider>
-    @for (item of getMonthlyObjectiveList(); track $index) {
-        <mat-card appearance="outlined">
-            <mat-card-title>
-                {{ item.description }}
-                @if (item.isReversible) {
-                    <mat-icon>cycle</mat-icon>
-                }
-            </mat-card-title>
-            <mat-card-content>
-                <div class="button-row">
-                    @for (innerItem of item.objectiveCellList; track $index) {
-                        <button class="objective-cell" mat-raised-button (click)="handleCellClick(innerItem)">
-                            <mat-icon>{{ innerItem.isChecked ? "done" : "remove"}}</mat-icon>
-                        </button>
-                    }
-                </div>
-            </mat-card-content>
-        </mat-card>
-    }
-</div>
-<div class="objectives-container">
-    <div>Yearly Objectives</div>
-    <mat-divider></mat-divider>
-    @for (item of getYearlyObjectiveList(); track $index) {
-        <mat-card appearance="outlined">
-            <mat-card-header>
-                <mat-card-title>
-                    {{ item.description }}
-                    @if (item.isReversible) {
-                        <mat-icon>cycle</mat-icon>
-                    }
-                </mat-card-title>
-            </mat-card-header>
-            <mat-card-content>
-                <div class="button-row">
-                    @for (innerItem of item.objectiveCellList; track $index) {
-                        <button class="objective-cell" mat-raised-button (click)="handleCellClick(innerItem)">
-                            <mat-icon>{{ innerItem.isChecked ? "done" : "remove"}}</mat-icon>
-                        </button>
-                    }
-                </div>
-            </mat-card-content>
-        </mat-card>
-    }
-</div>
-
+</mat-accordion>

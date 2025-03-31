@@ -1,6 +1,6 @@
 export enum PeriodType {
-    daily,
-    weekly,
-    monthly,
-    yearly
+    daily = 'Daily',
+    weekly = 'Weekly',
+    monthly = 'Monthly',
+    yearly = 'Yearly'
 }
