@@ -1,38 +1,46 @@
 <mat-accordion multi>
-    @for (periodType of periodTypeList; track $index) {
-        @let objectiveList = getObjectiveListByPeriod(periodType);
-        <mat-expansion-panel [expanded]=$first [disabled]="objectiveList.length == 0" hideToggle>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    {{ periodType }}
-                </mat-panel-title>
-                <mat-panel-description>
-                    <div class="objectives-count">{{ objectiveList.length }}</div>
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            @for (item of objectiveList; track $index) {
-                <mat-card appearance="outlined">
-                    <mat-card-header>
-                        <mat-card-title-group>
-                            <mat-card-subtitle>
-                                {{ item.description }}
-                            </mat-card-subtitle>
-                            @if (item.isReversible) {
-                                <mat-icon>cached</mat-icon>
-                            }
-                        </mat-card-title-group>
-                    </mat-card-header>
-                    <mat-card-content>
-                        <div class="button-row">
-                            @for (innerItem of item.objectiveCellList; track $index) {
-                                <button class="objective-cell" mat-raised-button (click)="handleCellClick(innerItem)">
-                                    <mat-icon>{{ innerItem.isChecked ? "done" : "remove"}}</mat-icon>
-                                </button>
-                            }
-                        </div>
-                    </mat-card-content>
-                </mat-card>
-            }
-        </mat-expansion-panel>
+  @for (periodType of periodTypeList; track $index) { @let objectiveList =
+  getObjectiveListByPeriod(periodType);
+  <mat-expansion-panel
+    [expanded]="$first"
+    [disabled]="objectiveList.length === 0"
+    hideToggle
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ periodType }}
+      </mat-panel-title>
+      <mat-panel-description>
+        <div class="objectives-count">{{ objectiveList.length }}</div>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    @for (item of objectiveList; track $index) {
+    <mat-card appearance="outlined">
+      <mat-card-header>
+        <mat-card-title-group>
+          <mat-card-subtitle>
+            {{ item.description }}
+          </mat-card-subtitle>
+          @if (item.isReversible) {
+          <mat-icon>cached</mat-icon>
+          }
+        </mat-card-title-group>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="button-row">
+          @for (innerItem of item.objectiveCellList; track $index) {
+          <button
+            class="objective-cell"
+            mat-raised-button
+            (click)="handleCellClick(innerItem)"
+          >
+            <mat-icon>{{ innerItem.isChecked ? "done" : "remove" }}</mat-icon>
+          </button>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
     }
+  </mat-expansion-panel>
+  }
 </mat-accordion>
