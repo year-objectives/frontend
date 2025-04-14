@@ -1,23 +1,23 @@
 .objectives-count {
-    background-color: #BA005C;
-    color: white;
-    text-align: center;
-    clip-path: circle(closest-side);
-    padding: 0.3rem;
-    margin-left: auto;
-    font-size: 0.6rem;
+  background-color: #ba005c;
+  color: white;
+  text-align: center;
+  clip-path: circle(closest-side);
+  padding: 0.3rem;
+  margin-left: auto;
+  font-size: 0.6rem;
 }
 
 .button-row {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 
-    .objective-cell {
-        margin: 0 3px;
+  .objective-cell {
+    margin: 0 3px;
 
-        mat-icon {
-            left: 0.5rem;
-        }
+    mat-icon {
+      left: 0.5rem;
     }
+  }
 }
