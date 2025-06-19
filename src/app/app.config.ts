@@ -8,7 +8,7 @@ export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'create-account', component: CreateAccountPageComponent },
   { path: 'home', redirectTo: '/objectives', pathMatch: 'full' },
-  { path: 'objectives', component: ObjectiveContainerComponent },
+  { path: 'objectives/:id', component: ObjectiveContainerComponent },
 ];
 
 export const appConfig = [provideRouter(routes)];

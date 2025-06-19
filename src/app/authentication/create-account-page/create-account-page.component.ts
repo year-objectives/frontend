@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -17,6 +17,9 @@ import {
   NameFieldComponent,
   createNameFormControl,
 } from '../field-components/field-components.component';
+import { AuthenticationService } from '../authentication.service';
+import { User } from 'src/app/model/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-account-page',
@@ -35,6 +38,10 @@ import {
   styleUrl: './create-account-page.component.scss',
 })
 export class CreateAccountPageComponent implements OnInit {
+  private router = inject(Router);
+  private authenticationService: AuthenticationService = inject(
+    AuthenticationService
+  );
   nameFormControl: FormControl = createNameFormControl();
   usernameFormControl: FormControl = createUsernameFormControl();
   passwordFormControl: FormControl = createPasswordFormControl();
@@ -50,10 +57,25 @@ export class CreateAccountPageComponent implements OnInit {
   }
 
   submitForm(): void {
-    // Check if is possible to create an account with the given data
+    let rawValue = this.formGroup.getRawValue();
 
-    let payload = JSON.stringify(this.formGroup.getRawValue());
+    let newUser: User = {
+      id: -1,
+      name: rawValue.nameFormControl,
+      email: rawValue.usernameFieldControl,
+    };
 
-    // Send payload to services (Password is exposed!)
+    let createdUserId = this.authenticationService.postNewUser(
+      newUser,
+      rawValue.passwordFormControl
+    );
+
+    debugger;
+
+    if (createdUserId == -1) {
+      // User already exist
+    } else {
+      this.router.navigate(['/objectives', createdUserId]);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,13 +9,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   createUsernameFormControl,
   createPasswordFormControl,
   UsernameFieldComponent,
   PasswordFieldComponent,
 } from '../field-components/field-components.component';
+import { AuthenticationService } from '../authentication.service';
 
 @Component({
   selector: 'app-login-page',
@@ -34,6 +35,11 @@ import {
   styleUrl: './login-page.component.scss',
 })
 export class LoginPageComponent implements OnInit {
+  private authenticationService: AuthenticationService = inject(
+    AuthenticationService
+  );
+  private router = inject(Router);
+
   usernameFormControl: FormControl = createUsernameFormControl();
   passwordFormControl: FormControl = createPasswordFormControl();
 
@@ -50,8 +56,13 @@ export class LoginPageComponent implements OnInit {
     // Get the username value and passwords, encrypt the password and send it to services.
     // For now, just go forward with whatever user it is.
 
-    let payload = JSON.stringify(this.formGroup.getRawValue());
+    let isRegistered = this.authenticationService.getUserByEmail(
+      this.formGroup.getRawValue()?.usernameFieldControl
+    );
 
-    // Send payload to services (Password is exposed!)
+    if (isRegistered) {
+      this.router.navigate(['/objectives', isRegistered.id]);
+    }
+    // Else _> Toast with error?
   }
 }
