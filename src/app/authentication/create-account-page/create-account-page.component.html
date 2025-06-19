@@ -1,0 +1,30 @@
+<mat-card class="card-container">
+  <h1 class="page-title">Create New Account</h1>
+  <mat-divider></mat-divider>
+  @if (formGroup) {
+  <mat-card-content class="form-container">
+    <form (ngSubmit)="submitForm()">
+      <app-name-field class="form-field" [nameFormControl]="nameFormControl" />
+      <app-username-field
+        class="form-field"
+        [usernameFormControl]="usernameFormControl"
+      />
+      <app-password-field
+        class="form-field"
+        [passwordFormControl]="passwordFormControl"
+      />
+    </form>
+  </mat-card-content>
+  }
+
+  <div class="sign-up-container">
+    <button
+      type="submit"
+      class="sign-up-button"
+      mat-flat-button
+      (click)="submitForm()"
+    >
+      Create
+    </button>
+  </div>
+</mat-card>
