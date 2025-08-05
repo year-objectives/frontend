@@ -1,20 +1,43 @@
 <mat-card class="card-container">
   <h1 class="page-title">Yearly objectives</h1>
   <mat-divider></mat-divider>
-  @if (formGroup) {
   <mat-card-content class="form-container">
-    <form>
-      <app-username-field
-        class="form-field"
-        [usernameFormControl]="usernameFormControl"
-      />
-      <app-password-field
-        class="form-field"
-        [passwordFormControl]="passwordFormControl"
-      />
-    </form>
+    <div>
+      <mat-form-field class="form-field">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          id="email"
+          type="email"
+          [formControl]="email"
+          placeholder="user@email.com"
+        />
+        <mat-error>{{ emailErrorMsg() }}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          id="password"
+          [type]="hidePassword() ? 'password' : 'text'"
+          [formControl]="password"
+        />
+        <button
+          matIconButton
+          matSuffix
+          (click)="showPassword($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hidePassword()"
+        >
+          <mat-icon>{{
+            hidePassword() ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </button>
+        <mat-error>{{ passwordErrorMsg() }}</mat-error>
+      </mat-form-field>
+    </div>
   </mat-card-content>
-  }
 
   <div class="sign-up-container">
     <button
@@ -25,8 +48,9 @@
     >
       Sign up
     </button>
+
     <div class="sign-up-buttons-links">
-      <button mat-button>Reset password</button>
+      <button mat-button disabled>Reset password</button>
       <mat-divider [vertical]="true"></mat-divider>
       <a mat-button routerLink="/create-account">Create account</a>
     </div>
