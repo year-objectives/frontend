@@ -2,7 +2,7 @@
   <mat-label>Name</mat-label>
   <input matInput type="text" id="name" [formControl]="nameFormControl()" />
 
-  @if (nameFormControl().hasError('required')) {
-  <mat-error>Name is <strong>required</strong></mat-error>
+  @if (nameFormControl().hasError("required")) {
+    <mat-error>Name is <strong>required</strong></mat-error>
   }
 </mat-form-field>
