@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ObjectiveItem } from '../model/objective-item';
 import { PeriodType } from '../model/period-type';
 import { ObjectiveCell } from '../model/objective-cell';
@@ -8,6 +8,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { ObjectiveService } from '../service/objective.service';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateObjectiveComponent } from '../create-objective/create-objective.component';
 
 @Component({
   selector: 'app-objective-container',
@@ -23,12 +26,51 @@ import { MatExpansionModule } from '@angular/material/expansion';
   styleUrl: './objective-container.component.scss',
 })
 export class ObjectiveContainerComponent {
+  readonly dialog = inject(MatDialog);
+  private objectiveService: ObjectiveService = inject(ObjectiveService);
+  private currentObjectives = this.objectiveService.getCurrentObjectives();
+
   periodTypeList: string[] = Object.values(PeriodType);
 
   getObjectiveListByPeriod(periodKey: string) {
     return this.objectiveItemList.filter(
-      (item) => item.periodType == periodKey
+      (item) => item.periodType == periodKey,
     );
+  }
+
+  createNumberOfCellInList(size: number): ObjectiveCell[] {
+    const list = [];
+    for (let i = 0; i < size; i++) {
+      list[i] = {
+        isChecked: Math.round(Math.random()) == 0 ? false : true,
+        checkedTimestamp: Date.now(),
+      };
+    }
+    return list;
+  }
+
+  handleCellClick(objectiveCell: ObjectiveCell) {
+    if (
+      !objectiveCell.isChecked ||
+      this.findObjectiveItemForCell(objectiveCell)?.isReversible
+    ) {
+      objectiveCell.isChecked = !objectiveCell.isChecked;
+      objectiveCell.checkedTimestamp = Date.now();
+    }
+  }
+
+  findObjectiveItemForCell(objectiveCell: ObjectiveCell): ObjectiveItem {
+    return this.objectiveItemList.filter(
+      (item) =>
+        item.objectiveCellList.filter((cell) => cell == objectiveCell).length >
+        0,
+    )[0];
+  }
+
+  createObjective(periodType: string): void {
+    this.dialog.open(CreateObjectiveComponent, {
+      data: periodType,
+    });
   }
 
   // Dummy data
@@ -86,33 +128,4 @@ export class ObjectiveContainerComponent {
       objectiveCellList: this.createNumberOfCellInList(4),
     },
   ];
-
-  createNumberOfCellInList(size: number): ObjectiveCell[] {
-    const list = [];
-    for (let i = 0; i < size; i++) {
-      list[i] = {
-        isChecked: Math.round(Math.random()) == 0 ? false : true,
-        checkedTimestamp: Date.now(),
-      };
-    }
-    return list;
-  }
-
-  handleCellClick(objectiveCell: ObjectiveCell) {
-    if (
-      !objectiveCell.isChecked ||
-      this.findObjectiveItemForCell(objectiveCell)?.isReversible
-    ) {
-      objectiveCell.isChecked = !objectiveCell.isChecked;
-      objectiveCell.checkedTimestamp = Date.now();
-    }
-  }
-
-  findObjectiveItemForCell(objectiveCell: ObjectiveCell): ObjectiveItem {
-    return this.objectiveItemList.filter(
-      (item) =>
-        item.objectiveCellList.filter((cell) => cell == objectiveCell).length >
-        0
-    )[0];
-  }
 }

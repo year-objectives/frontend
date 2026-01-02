@@ -1,0 +1,233 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "first user",
+      "email": "first@user.com",
+      "password": "StrongPa$$word"
+    },
+    {
+      "id": "2",
+      "name": "second user",
+      "email": "second@user.com"
+    },
+    {
+      "id": -1,
+      "name": "Testinho"
+    },
+    {
+      "id": "21c6",
+      "name": "oto test",
+      "password": "StrongPa$$word"
+    }
+  ],
+  "objectives": [
+    {
+      "id": "1",
+      "userId": 1,
+      "periodType": "Daily",
+      "description": "Ride bike",
+      "isReversible": false,
+      "accomplishments": [
+        {
+          "id": 1,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-04-23T18:25:43.511Z"
+        },
+        {
+          "id": 2,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        },
+        {
+          "id": 3,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        },
+        {
+          "id": 4,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-05-25T18:25:43.511Z"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "userId": 1,
+      "periodType": "Daily",
+      "description": "work work",
+      "isReversible": true,
+      "accomplishments": [
+        {
+          "id": 1,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        },
+        {
+          "id": 2,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-04-23T18:25:43.511Z"
+        },
+        {
+          "id": 3,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        },
+        {
+          "id": 4,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-05-25T18:25:43.511Z"
+        },
+        {
+          "id": 5,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        },
+        {
+          "id": 6,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-05-25T18:25:43.511Z"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "userId": 2,
+      "periodType": "Daily",
+      "description": "Breakfast",
+      "isReversible": false,
+      "accomplishments": [
+        {
+          "id": 1,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-04-23T18:25:43.511Z"
+        },
+        {
+          "id": 2,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "userId": 1,
+      "periodType": "Weekly",
+      "description": "Dishes",
+      "isReversible": false,
+      "accomplishments": [
+        {
+          "id": 1,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-04-23T18:25:43.511Z"
+        },
+        {
+          "id": 2,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        },
+        {
+          "id": 3,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        }
+      ]
+    },
+    {
+      "id": "5",
+      "userId": 2,
+      "periodType": "Weekly",
+      "description": "Eat francesinha",
+      "isReversible": true,
+      "accomplishments": [
+        {
+          "id": 1,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-03-23T18:25:43.511Z"
+        },
+        {
+          "id": 2,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-02-23T18:25:43.511Z"
+        },
+        {
+          "id": 3,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-04-23T18:25:43.511Z"
+        },
+        {
+          "id": 4,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-05-25T18:25:43.511Z"
+        },
+        {
+          "id": 5,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        }
+      ]
+    },
+    {
+      "id": "6",
+      "userId": 2,
+      "periodType": "Weekly",
+      "description": "Climb",
+      "isReversible": false,
+      "accomplishments": [
+        {
+          "id": 1,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-04-23T18:25:43.511Z"
+        },
+        {
+          "id": 2,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        },
+        {
+          "id": 3,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        },
+        {
+          "id": 4,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-05-25T18:25:43.511Z"
+        }
+      ]
+    },
+    {
+      "id": "7",
+      "userId": 1,
+      "periodType": "Yearly",
+      "description": "Travel away",
+      "isReversible": false,
+      "accomplishments": [
+        {
+          "id": 1,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-04-23T18:25:43.511Z"
+        },
+        {
+          "id": 2,
+          "isChecked": false,
+          "checkedTimeStamp": ""
+        }
+      ]
+    },
+    {
+      "id": "8",
+      "userId": 2,
+      "periodType": "Yearly",
+      "description": "Renew yearly objectives",
+      "isReversible": false,
+      "accomplishments": [
+        {
+          "id": 1,
+          "isChecked": true,
+          "checkedTimeStamp": "2025-04-23T18:25:43.511Z"
+        }
+      ]
+    }
+  ]
+}
