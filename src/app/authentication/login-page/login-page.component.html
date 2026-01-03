@@ -1,27 +1,28 @@
 <mat-card class="card-container">
   <h1 class="page-title">Yearly objectives</h1>
-  <mat-divider></mat-divider>
   <mat-card-content class="form-container">
     <div>
       <mat-form-field class="form-field">
         <mat-label>Email</mat-label>
         <input
           matInput
-          id="email"
           type="email"
-          [formControl]="email"
+          [field]="loginForm.email"
           placeholder="user@email.com"
         />
-        <mat-error>{{ emailErrorMsg() }}</mat-error>
+        @if (loginForm.email().touched() && loginForm.email().invalid()) {
+          <mat-error>
+            {{ loginForm.email().errors()[0].message }}
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field class="form-field">
         <mat-label>Password</mat-label>
         <input
           matInput
-          id="password"
           [type]="hidePassword() ? 'password' : 'text'"
-          [formControl]="password"
+          [field]="loginForm.password"
         />
         <button
           matIconButton
@@ -34,7 +35,11 @@
             hidePassword() ? "visibility_off" : "visibility"
           }}</mat-icon>
         </button>
-        <mat-error>{{ passwordErrorMsg() }}</mat-error>
+        @if (loginForm.password().touched() && loginForm.password().invalid()) {
+          <mat-error>
+            {{ loginForm.password().errors()[0].message }}
+          </mat-error>
+        }
       </mat-form-field>
     </div>
   </mat-card-content>
@@ -45,8 +50,9 @@
       class="sign-up-button"
       mat-flat-button
       (click)="submitForm()"
+      [disabled]="loginForm().invalid()"
     >
-      Sign up
+      Login
     </button>
 
     <div class="sign-up-buttons-links">

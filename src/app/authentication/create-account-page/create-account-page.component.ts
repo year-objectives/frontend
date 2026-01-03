@@ -1,15 +1,20 @@
 import { Component, inject, signal } from '@angular/core';
 import {
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+  Field,
+  form,
+  required,
+  email,
+  minLength,
+  maxLength,
+  pattern,
+} from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
-import { AuthenticationService } from '../../service/authentication.service';
+import {
+  AuthenticationService,
+  SignUpData,
+} from '../../service/authentication.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -17,15 +22,7 @@ import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-create-account-page',
-  imports: [
-    MatInputModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatCardModule,
-    MatIcon,
-  ],
+  imports: [MatInputModule, MatButtonModule, MatCardModule, MatIcon, Field],
   templateUrl: './create-account-page.component.html',
   styleUrl: './create-account-page.component.scss',
 })
@@ -35,60 +32,72 @@ export class CreateAccountPageComponent {
   private authService: AuthenticationService = inject(AuthenticationService);
 
   protected hidePassword = signal(true);
-  protected nameErrorMsg = signal('');
-  protected emailErrorMsg = signal('');
-  protected passwordErrorMsg = signal('');
 
-  readonly name = new FormControl('', Validators.required);
-  readonly email = new FormControl('', [Validators.required, Validators.email]);
-  readonly password = new FormControl('', [
-    Validators.required,
-    Validators.minLength(8),
-  ]);
+  protected signUpModel = signal<SignUpData>({
+    name: '',
+    email: '',
+    password: '',
+  });
+
+  protected signUpForm = form(this.signUpModel, (schemaPath) => {
+    // name validations
+    required(schemaPath.name, { message: 'Name is required' });
+
+    // email validations
+    required(schemaPath.email, { message: 'Email is required' });
+    email(schemaPath.email, { message: 'Enter a valid email address' });
+
+    // password validations
+    required(schemaPath.password, { message: 'Password is required' });
+    minLength(schemaPath.password, 8, {
+      message: 'Password needs to be at least 8 characters',
+    });
+    maxLength(schemaPath.password, 64, {
+      message: 'Password is too long, limit is 64 characters',
+    });
+    pattern(schemaPath.password, /(?=.*?[a-z])/, {
+      message: 'At least one lowercase character is required',
+    });
+    pattern(schemaPath.password, /(?=.*?[A-Z])/, {
+      message: 'At least one uppercase character is required',
+    });
+    pattern(schemaPath.password, /(?=.*?[0-9])/, {
+      message: 'At least one numeric character is required',
+    });
+    pattern(schemaPath.password, /(?=.*?[#?!@$%^&*-])/, {
+      message:
+        'At least one one of the special character (#?!@$%^&*-) is required',
+    });
+  });
 
   showPassword(event: MouseEvent) {
     this.hidePassword.set(!this.hidePassword());
     event.stopPropagation();
   }
 
-  submitForm(): void {
-    if (this.name.valid && this.email.valid && this.password.valid) {
-      this.createNewAccount();
-    }
-
-    if (this.name.hasError('required'))
-      this.nameErrorMsg.set('Name is required');
-
-    if (this.email.hasError('email'))
-      this.emailErrorMsg.set('Not a valid email');
-
-    if (this.email.hasError('required'))
-      this.emailErrorMsg.set('Email is required');
-
-    if (this.password.hasError('required'))
-      this.passwordErrorMsg.set('Password is required');
-
-    if (this.password.hasError('minlength'))
-      this.passwordErrorMsg.set('Password needs to be 8 digits or longer');
+  submitForm() {
+    this.authService.createAccount(this.signUpForm().value()).subscribe({
+      next: () => {
+        this.resetForm();
+        this.router.navigateByUrl('/objectives');
+      },
+      error: (error) => {
+        this.toastNotification.open(
+          this.extractErrorMessage(error),
+          'Dismiss',
+          { duration: 5000 },
+        );
+      },
+    });
   }
 
-  private createNewAccount() {
-    this.authService
-      .createAccount(
-        this.name.value as string,
-        this.email.value as string,
-        this.password.value as string,
-      )
-      .subscribe({
-        next: () => this.router.navigateByUrl('/objectives'),
-        error: (error) => {
-          this.toastNotification.open(
-            this.extractErrorMessage(error),
-            'Dismiss',
-            { duration: 5000 },
-          );
-        },
-      });
+  private resetForm() {
+    this.signUpForm().reset();
+    this.signUpModel.set({
+      name: '',
+      email: '',
+      password: '',
+    });
   }
 
   private extractErrorMessage(httpError: HttpErrorResponse): string {

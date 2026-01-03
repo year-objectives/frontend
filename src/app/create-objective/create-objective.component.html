@@ -1,9 +1,9 @@
-<h2 mat-dialog-title>Create a new objective</h2>
+<h2 mat-dialog-title>New objective</h2>
 
 <mat-dialog-content class="form-container">
   <mat-form-field>
     <mat-label>Period</mat-label>
-    <mat-select [formControl]="periodControl">
+    <mat-select [field]="objectiveForm.period">
       @for (period of possiblePeriodTypes; track period) {
         <mat-option [value]="period">{{ period }}</mat-option>
       }
@@ -11,33 +11,38 @@
   </mat-form-field>
   <mat-form-field>
     <mat-label>Description</mat-label>
-    <input
-      matInput
-      id="description"
-      type="text"
-      [formControl]="descriptionControl"
-    />
-  </mat-form-field>
-  <mat-form-field>
-    <mat-label>isReversible</mat-label>
-    <mat-select [formControl]="reversibleControl">
-      <mat-option value="true">True</mat-option>
-      <mat-option value="false">False</mat-option>
-    </mat-select>
+    <input matInput type="text" [field]="objectiveForm.description" />
+    @if (
+      objectiveForm.description().touched() &&
+      objectiveForm.description().invalid()
+    ) {
+      <mat-error>{{
+        objectiveForm.description().errors()[0].message
+      }}</mat-error>
+    }
   </mat-form-field>
   <mat-form-field>
     <mat-label>Number of occurrences</mat-label>
-    <input
-      matInput
-      id="accomplishments"
-      type="Number"
-      [formControl]="accomplishmentsControl"
-    />
+    <input matInput type="number" [field]="objectiveForm.numberOfOccurrences" />
+    @if (
+      objectiveForm.numberOfOccurrences().touched() &&
+      objectiveForm.numberOfOccurrences().invalid()
+    ) {
+      <mat-error>{{
+        objectiveForm.numberOfOccurrences().errors()[0].message
+      }}</mat-error>
+    }
   </mat-form-field>
+  <mat-checkbox [field]="objectiveForm.isReversible">Reversible</mat-checkbox>
 </mat-dialog-content>
 <mat-dialog-actions>
   <button matButton mat-dialog-close>Cancel</button>
-  <button matButton (click)="submitNewObjective()" cdkFocusInitial>
+  <button
+    matButton
+    (click)="submitNewObjective()"
+    [disabled]="objectiveForm().invalid()"
+    cdkFocusInitial
+  >
     Create
   </button>
 </mat-dialog-actions>

@@ -1,34 +1,38 @@
 <mat-card class="card-container">
-  <h1 class="page-title">Create New Account</h1>
-  <mat-divider></mat-divider>
+  <h1 class="page-title">New Account</h1>
   <mat-card-content class="form-container">
     <div>
       <mat-form-field class="form-field">
         <mat-label>Name</mat-label>
-        <input matInput id="name" type="text" [formControl]="name" />
-        <mat-error>{{ nameErrorMsg() }}</mat-error>
+        <input matInput type="text" [field]="signUpForm.name" />
+        @if (signUpForm.name().touched() && signUpForm.name().invalid()) {
+          <mat-error>
+            {{ signUpForm.name().errors()[0].message }}
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field class="form-field">
         <mat-label>Email</mat-label>
         <input
           matInput
-          id="email"
           type="email"
-          [formControl]="email"
+          [field]="signUpForm.email"
           placeholder="user@email.com"
-          required
         />
-        <mat-error>{{ emailErrorMsg() }}</mat-error>
+        @if (signUpForm.email().touched() && signUpForm.email().invalid()) {
+          <mat-error>
+            {{ signUpForm.email().errors()[0].message }}
+          </mat-error>
+        }
       </mat-form-field>
 
       <mat-form-field class="form-field">
         <mat-label>Password</mat-label>
         <input
           matInput
-          id="password"
           [type]="hidePassword() ? 'password' : 'text'"
-          [formControl]="password"
+          [field]="signUpForm.password"
         />
         <button
           matIconButton
@@ -41,7 +45,13 @@
             hidePassword() ? "visibility_off" : "visibility"
           }}</mat-icon>
         </button>
-        <mat-error>{{ passwordErrorMsg() }}</mat-error>
+        @if (
+          signUpForm.password().touched() && signUpForm.password().invalid()
+        ) {
+          <mat-error>
+            {{ signUpForm.password().errors()[0].message }}
+          </mat-error>
+        }
       </mat-form-field>
     </div>
   </mat-card-content>
@@ -52,6 +62,7 @@
       class="sign-up-button"
       mat-flat-button
       (click)="submitForm()"
+      [disabled]="signUpForm().invalid()"
     >
       Create
     </button>

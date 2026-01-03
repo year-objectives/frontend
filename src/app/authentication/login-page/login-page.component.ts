@@ -1,17 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
-import {
-  FormControl,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { email, Field, form, required } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
-import { AuthenticationService } from '../../service/authentication.service';
+import {
+  AuthenticationService,
+  LoginData,
+} from '../../service/authentication.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -19,30 +17,36 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-login-page',
   imports: [
     MatInputModule,
-    ReactiveFormsModule,
-    FormsModule,
     MatButtonModule,
     MatDividerModule,
     MatCardModule,
     MatIconModule,
     RouterLink,
+    Field,
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })
 export class LoginPageComponent {
-  private authenticationService: AuthenticationService = inject(
-    AuthenticationService,
-  );
+  private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
   private toastNotification = inject(MatSnackBar);
 
-  protected emailErrorMsg = signal('');
-  protected passwordErrorMsg = signal('');
   protected hidePassword = signal(true);
 
-  readonly email = new FormControl('', [Validators.required, Validators.email]);
-  readonly password = new FormControl('', Validators.required);
+  protected loginModel = signal<LoginData>({
+    email: '',
+    password: '',
+  });
+
+  protected loginForm = form(this.loginModel, (schemaPath) => {
+    // Email validations
+    required(schemaPath.email, { message: 'Email is required' });
+    email(schemaPath.email, { message: 'Enter a valid email address' });
+
+    // Password validations
+    required(schemaPath.password, { message: 'Password is required' });
+  });
 
   showPassword(event: MouseEvent) {
     this.hidePassword.set(!this.hidePassword());
@@ -50,35 +54,29 @@ export class LoginPageComponent {
   }
 
   submitForm(): void {
-    if (this.email.valid && this.password.valid) this.onLogin();
-
-    if (this.email.hasError('email'))
-      this.emailErrorMsg.set('Not a valid email');
-
-    if (this.email.hasError('required'))
-      this.emailErrorMsg.set('Email is required');
-
-    if (this.password.hasError('required'))
-      this.passwordErrorMsg.set('Password is required');
+    this.authenticationService.login(this.loginForm().value()).subscribe({
+      next: () => {
+        this.resetForm();
+        this.router.navigate(['/objectives']);
+      },
+      error: (error) => {
+        this.toastNotification.open(
+          this.extractErrorMessage(error),
+          'Dismiss',
+          {
+            duration: 5000,
+          },
+        );
+      },
+    });
   }
 
-  private onLogin() {
-    this.authenticationService
-      .login(this.email.value as string, this.password.value as string)
-      .subscribe({
-        next: () => {
-          this.router.navigate(['/objectives']);
-        },
-        error: (error) => {
-          this.toastNotification.open(
-            this.extractErrorMessage(error),
-            'Dismiss',
-            {
-              duration: 5000,
-            },
-          );
-        },
-      });
+  private resetForm() {
+    this.loginForm().reset();
+    this.loginModel.set({
+      email: '',
+      password: '',
+    });
   }
 
   private extractErrorMessage(httpError: HttpErrorResponse): string {
@@ -91,7 +89,8 @@ export class LoginPageComponent {
     }
 
     const status = httpError.status;
-    if (status === 401) errorMsg = 'Invalid credentials or not registered user';
+    if (status === 401)
+      errorMsg = 'Invalid credentials or user is not registered';
     if (status > 500 && status < 600) {
       errorMsg =
         "The server isn't currently responding. Please try again later.";

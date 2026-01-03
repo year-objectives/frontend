@@ -11,6 +11,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ObjectiveService } from '../service/objective.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateObjectiveComponent } from '../create-objective/create-objective.component';
+import { ContentObserver } from '@angular/cdk/observers';
 
 @Component({
   selector: 'app-objective-container',
@@ -68,8 +69,14 @@ export class ObjectiveContainerComponent {
   }
 
   createObjective(periodType: string): void {
-    this.dialog.open(CreateObjectiveComponent, {
+    let dialogRef = this.dialog.open(CreateObjectiveComponent, {
       data: periodType,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        // Update objectives data
+      }
     });
   }
 

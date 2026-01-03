@@ -2,19 +2,30 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
 
+export interface SignUpData {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginData {
+  email: string;
+  password: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
   private httpClient: HttpClient = inject(HttpClient);
 
-  login(email: string, password: string) {
+  login(data: LoginData) {
     return this.httpClient
       .post<any>('/api/v1/users', null, {
         headers: {
           'Content-Type': 'application/json',
-          'x-user': email,
-          'x-password': password,
+          'x-user': data.email,
+          'x-password': data.password,
           credentials: 'include',
         },
       })
@@ -28,14 +39,14 @@ export class AuthenticationService {
       );
   }
 
-  createAccount(name: string, email: string, password: string) {
+  createAccount(data: SignUpData) {
     return this.httpClient
       .post<any>('/api/v1/users', null, {
         headers: {
           'Content-Type': 'application/json',
-          'x-name': name,
-          'x-user': email,
-          'x-password': password,
+          'x-name': data.name,
+          'x-user': data.email,
+          'x-password': data.password,
           credentials: 'include',
         },
       })
