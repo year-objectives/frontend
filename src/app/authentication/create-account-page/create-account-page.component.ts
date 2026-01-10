@@ -11,14 +11,10 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
-import {
-  AuthenticationService,
-  SignUpData,
-} from '../../service/authentication.service';
+import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { HttpErrorResponse } from '@angular/common/http';
 import { MatIcon } from '@angular/material/icon';
+import { UserRegisterRequestDto } from '../dtos/user-register-request-dto';
 
 @Component({
   selector: 'app-create-account-page',
@@ -28,20 +24,23 @@ import { MatIcon } from '@angular/material/icon';
 })
 export class CreateAccountPageComponent {
   private router = inject(Router);
-  private toastNotification = inject(MatSnackBar);
   private authService: AuthenticationService = inject(AuthenticationService);
 
   protected hidePassword = signal(true);
 
-  protected signUpModel = signal<SignUpData>({
-    name: '',
+  protected signUpModel = signal<UserRegisterRequestDto>({
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
+    username: '',
   });
 
   protected signUpForm = form(this.signUpModel, (schemaPath) => {
     // name validations
-    required(schemaPath.name, { message: 'Name is required' });
+    required(schemaPath.first_name, { message: 'First name is required' });
+    required(schemaPath.last_name, { message: 'Last name is required' });
+    required(schemaPath.username, { message: 'Username is required' });
 
     // email validations
     required(schemaPath.email, { message: 'Email is required' });
@@ -49,12 +48,13 @@ export class CreateAccountPageComponent {
 
     // password validations
     required(schemaPath.password, { message: 'Password is required' });
-    minLength(schemaPath.password, 8, {
-      message: 'Password needs to be at least 8 characters',
+    minLength(schemaPath.password, 10, {
+      message: 'Password needs to be at least 10 characters',
     });
     maxLength(schemaPath.password, 64, {
       message: 'Password is too long, limit is 64 characters',
     });
+    /* TODO: Keep or discard these validations?
     pattern(schemaPath.password, /(?=.*?[a-z])/, {
       message: 'At least one lowercase character is required',
     });
@@ -68,6 +68,7 @@ export class CreateAccountPageComponent {
       message:
         'At least one one of the special character (#?!@$%^&*-) is required',
     });
+    */
   });
 
   showPassword(event: MouseEvent) {
@@ -79,14 +80,7 @@ export class CreateAccountPageComponent {
     this.authService.createAccount(this.signUpForm().value()).subscribe({
       next: () => {
         this.resetForm();
-        this.router.navigateByUrl('/objectives');
-      },
-      error: (error) => {
-        this.toastNotification.open(
-          this.extractErrorMessage(error),
-          'Dismiss',
-          { duration: 5000 },
-        );
+        this.router.navigateByUrl('/login');
       },
     });
   }
@@ -94,28 +88,11 @@ export class CreateAccountPageComponent {
   private resetForm() {
     this.signUpForm().reset();
     this.signUpModel.set({
-      name: '',
+      first_name: '',
+      last_name: '',
       email: '',
       password: '',
+      username: '',
     });
-  }
-
-  private extractErrorMessage(httpError: HttpErrorResponse): string {
-    let errorMsg: string = 'Account creation failed';
-    if (!httpError) return errorMsg;
-
-    if (httpError.error instanceof ErrorEvent) {
-      // Client side or network error occurred.
-      return `An error occurred: ${httpError.error.message}`;
-    }
-
-    const status = httpError.status;
-    if (status === 401) errorMsg = 'Invalid data or user already created';
-    if (status > 500 && status < 600) {
-      errorMsg =
-        "The server isn't currently responding. Please try again later.";
-    }
-
-    return errorMsg;
   }
 }

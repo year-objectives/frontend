@@ -8,10 +8,11 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { ObjectiveService } from '../service/objective.service';
+import { ObjectiveDto, ObjectiveService } from '../service/objective.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateObjectiveComponent } from '../create-objective/create-objective.component';
-import { ContentObserver } from '@angular/cdk/observers';
+import { AsyncPipe } from '@angular/common';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-objective-container',
@@ -22,6 +23,7 @@ import { ContentObserver } from '@angular/cdk/observers';
     MatIconModule,
     MatButtonModule,
     MatExpansionModule,
+    AsyncPipe,
   ],
   templateUrl: './objective-container.component.html',
   styleUrl: './objective-container.component.scss',
@@ -29,7 +31,10 @@ import { ContentObserver } from '@angular/cdk/observers';
 export class ObjectiveContainerComponent {
   readonly dialog = inject(MatDialog);
   private objectiveService: ObjectiveService = inject(ObjectiveService);
-  private currentObjectives = this.objectiveService.getCurrentObjectives();
+
+  // TODO: Refactor to stop using dummy data
+  protected currentObjectives: Observable<ObjectiveDto[]> =
+    this.objectiveService.getCurrentObjectives();
 
   periodTypeList: string[] = Object.values(PeriodType);
 

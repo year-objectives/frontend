@@ -3,16 +3,11 @@
   <mat-card-content class="form-container">
     <div>
       <mat-form-field class="form-field">
-        <mat-label>Email</mat-label>
-        <input
-          matInput
-          type="email"
-          [field]="loginForm.email"
-          placeholder="user@email.com"
-        />
-        @if (loginForm.email().touched() && loginForm.email().invalid()) {
+        <mat-label>Username</mat-label>
+        <input matInput type="text" [field]="loginForm.username" />
+        @if (loginForm.username().touched() && loginForm.username().invalid()) {
           <mat-error>
-            {{ loginForm.email().errors()[0].message }}
+            {{ loginForm.username().errors()[0].message }}
           </mat-error>
         }
       </mat-form-field>

@@ -1,3 +1,4 @@
+<p>Dummy data</p>
 <mat-accordion multi>
   @for (periodType of periodTypeList; track $index) {
     @let objectiveList = getObjectiveListByPeriod(periodType);
@@ -36,3 +37,11 @@
     </mat-expansion-panel>
   }
 </mat-accordion>
+<p>Data from server</p>
+<ul>
+  @for (item of currentObjectives | async; track $index) {
+    <li>{{ item.name }} -- {{ item.description }}</li>
+  } @empty {
+    <li>No registered objectives</li>
+  }
+</ul>

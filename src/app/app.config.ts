@@ -3,8 +3,11 @@ import { ObjectiveContainerComponent } from './objective-container/objective-con
 import { LoginPageComponent } from './authentication/login-page/login-page.component';
 import { CreateAccountPageComponent } from './authentication/create-account-page/create-account-page.component';
 import { ApplicationConfig } from '@angular/core';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { errorInterceptor } from './interceptors/error.interceptor';
 
+// TODO: Add guards to routes
 export const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginPageComponent },
@@ -14,5 +17,8 @@ export const routes: Routes = [
 ];
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideHttpClient(), provideRouter(routes)],
+  providers: [
+    provideHttpClient(withInterceptors([authInterceptor, errorInterceptor])),
+    provideRouter(routes),
+  ],
 };

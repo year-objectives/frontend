@@ -3,11 +3,35 @@
   <mat-card-content class="form-container">
     <div>
       <mat-form-field class="form-field">
-        <mat-label>Name</mat-label>
-        <input matInput type="text" [field]="signUpForm.name" />
-        @if (signUpForm.name().touched() && signUpForm.name().invalid()) {
+        <mat-label>First name</mat-label>
+        <input matInput type="text" [field]="signUpForm.first_name" />
+        @if (
+          signUpForm.first_name().touched() && signUpForm.first_name().invalid()
+        ) {
           <mat-error>
-            {{ signUpForm.name().errors()[0].message }}
+            {{ signUpForm.first_name().errors()[0].message }}
+          </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Last name</mat-label>
+        <input matInput type="text" [field]="signUpForm.last_name" />
+        @if (
+          signUpForm.last_name().touched() && signUpForm.last_name().invalid()
+        ) {
+          <mat-error>
+            {{ signUpForm.last_name().errors()[0].message }}
+          </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" [field]="signUpForm.username" />
+        @if (
+          signUpForm.username().touched() && signUpForm.username().invalid()
+        ) {
+          <mat-error>
+            {{ signUpForm.username().errors()[0].message }}
           </mat-error>
         }
       </mat-form-field>

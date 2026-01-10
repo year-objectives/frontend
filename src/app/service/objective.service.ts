@@ -1,5 +1,5 @@
-import { HttpClient, httpResource } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { ApiService } from '../api.service';
 
 export interface NewObjectiveData {
   period: string;
@@ -8,17 +8,29 @@ export interface NewObjectiveData {
   numberOfOccurrences: number;
 }
 
+export interface ObjectiveDto {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  reversible: boolean;
+  due_date: number;
+  target_amount: number;
+  tags: string[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ObjectiveService {
-  private httpClient: HttpClient = inject(HttpClient);
+  private apiService: ApiService = inject(ApiService);
+  readonly objectivesUrl = '/objectives';
 
   getCurrentObjectives() {
-    return httpResource(() => '/api/v1/objectives');
+    return this.apiService.get<ObjectiveDto[]>(this.objectivesUrl);
   }
 
   createObjective(newObjective: NewObjectiveData) {
-    return this.httpClient.post<any>('/api/v1/objectives', newObjective);
+    return this.apiService.post<any>(this.objectivesUrl, newObjective);
   }
 }
