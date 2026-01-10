@@ -1,75 +1,49 @@
-# Objectives App
+# Yearly Objectives frontend
 
-## Pages
+This project provides a user interface to allow user interactions with objectives.
 
-### Login Page
+## Prerequisites
 
-Entry point for the application, where the user can log in, reset password or register a new user.
+### Node.js
 
-Components:
+Version 20.19.0 or newer
 
-- Username/email field
-- Password field
-- "Forgot password" button
-- "Register" button
+To check installed version, run:
 
-### Register user page
+```shell
+node --version
+```
 
-Components:
+For installation, refer to the [official site](https://nodejs.org/en/download).
 
-- Username/email field
-- Password field
-- Confirm password field
-- Conclude button
-- Cancel/return button
+### Angular CLI
 
-### Home/Objectives pages
+Version 21 or newer
 
-Shows the the current objectives for the current time period of each "frequency" group. Allow creation and removal of a objective.
+To check installed version, run:
 
-Components:
+```shell
+ng --version
+```
 
-- List of objectives for each frequency type
-- "Add objective" button
-- "Remove objective" button
+To install Angular CLI, run:
 
-## Model
+```shell
+npm install -g @angular/cli
+```
 
-### Objective
+## Running the application in dev mode
 
-#### Type
+```shell
+npm run start:dev
+```
 
-    Daily
-    Weekly
-    Monthly
-    Yearly
+The application will be running in http://localhost:4200/
 
-#### Description
+## Lint
 
-    Title of the objective
+To validate the lint for the project use
 
-#### ObjectiveCells
-
-    List of objects with the size of the amount of times this objective is expected to occur in the respective interval.
-
-#### Reversible
-
-    If checks can be reversible.
-
-#### Timestamp of when was concluded(?)
-
-### ObjectiveCell
-
-#### Done
-
-    Boolean for when this cell is checked/done.
-
-#### Timestamp
-
-    Timestamp for when the cell was checked/done last time.
-
-## General development information
-
-- Mobile first
-- Week definition: Monday -> Sunday
-- Recurrences flag to keep track of the amount of times the objective was concluded beyond expected amount.
+```shell
+ng lint
+```
