@@ -1,81 +1,98 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+  Field,
+  form,
+  required,
+  email,
+  minLength,
+  maxLength,
+  pattern,
+} from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
-import {
-  createUsernameFormControl,
-  createPasswordFormControl,
-  UsernameFieldComponent,
-  PasswordFieldComponent,
-  NameFieldComponent,
-  createNameFormControl,
-} from '../field-components/field-components.component';
-import { AuthenticationService } from '../authentication.service';
-import { User } from 'src/app/model/user';
+import { AuthenticationService } from '../services/authentication.service';
 import { Router } from '@angular/router';
+import { MatIcon } from '@angular/material/icon';
+import { UserRegisterRequestDto } from '../dtos/user-register-request-dto';
 
 @Component({
   selector: 'app-create-account-page',
-  imports: [
-    MatInputModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatCardModule,
-    UsernameFieldComponent,
-    PasswordFieldComponent,
-    NameFieldComponent,
-  ],
+  imports: [MatInputModule, MatButtonModule, MatCardModule, MatIcon, Field],
   templateUrl: './create-account-page.component.html',
   styleUrl: './create-account-page.component.scss',
 })
-export class CreateAccountPageComponent implements OnInit {
+export class CreateAccountPageComponent {
   private router = inject(Router);
-  private authenticationService: AuthenticationService = inject(
-    AuthenticationService
-  );
-  nameFormControl: FormControl = createNameFormControl();
-  usernameFormControl: FormControl = createUsernameFormControl();
-  passwordFormControl: FormControl = createPasswordFormControl();
+  private authService: AuthenticationService = inject(AuthenticationService);
 
-  formGroup: FormGroup | any = null;
+  protected hidePassword = signal(true);
 
-  ngOnInit(): void {
-    this.formGroup = new FormGroup({
-      nameFormControl: this.nameFormControl,
-      usernameFormControl: this.usernameFormControl,
-      passwordFormControl: this.passwordFormControl,
+  protected signUpModel = signal<UserRegisterRequestDto>({
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    username: '',
+  });
+
+  protected signUpForm = form(this.signUpModel, (schemaPath) => {
+    // name validations
+    required(schemaPath.first_name, { message: 'First name is required' });
+    required(schemaPath.last_name, { message: 'Last name is required' });
+    required(schemaPath.username, { message: 'Username is required' });
+
+    // email validations
+    required(schemaPath.email, { message: 'Email is required' });
+    email(schemaPath.email, { message: 'Enter a valid email address' });
+
+    // password validations
+    required(schemaPath.password, { message: 'Password is required' });
+    minLength(schemaPath.password, 10, {
+      message: 'Password needs to be at least 10 characters',
+    });
+    maxLength(schemaPath.password, 64, {
+      message: 'Password is too long, limit is 64 characters',
+    });
+    /* TODO: Keep or discard these validations?
+    pattern(schemaPath.password, /(?=.*?[a-z])/, {
+      message: 'At least one lowercase character is required',
+    });
+    pattern(schemaPath.password, /(?=.*?[A-Z])/, {
+      message: 'At least one uppercase character is required',
+    });
+    pattern(schemaPath.password, /(?=.*?[0-9])/, {
+      message: 'At least one numeric character is required',
+    });
+    pattern(schemaPath.password, /(?=.*?[#?!@$%^&*-])/, {
+      message:
+        'At least one one of the special character (#?!@$%^&*-) is required',
+    });
+    */
+  });
+
+  showPassword(event: MouseEvent) {
+    this.hidePassword.set(!this.hidePassword());
+    event.stopPropagation();
+  }
+
+  submitForm() {
+    this.authService.createAccount(this.signUpForm().value()).subscribe({
+      next: () => {
+        this.resetForm();
+        this.router.navigateByUrl('/login');
+      },
     });
   }
 
-  submitForm(): void {
-    let rawValue = this.formGroup.getRawValue();
-
-    let newUser: User = {
-      id: -1,
-      name: rawValue.nameFormControl,
-      email: rawValue.usernameFieldControl,
-    };
-
-    let createdUserId = this.authenticationService.postNewUser(
-      newUser,
-      rawValue.passwordFormControl
-    );
-
-    debugger;
-
-    if (createdUserId == -1) {
-      // User already exist
-    } else {
-      this.router.navigate(['/objectives', createdUserId]);
-    }
+  private resetForm() {
+    this.signUpForm().reset();
+    this.signUpModel.set({
+      first_name: '',
+      last_name: '',
+      email: '',
+      password: '',
+      username: '',
+    });
   }
 }

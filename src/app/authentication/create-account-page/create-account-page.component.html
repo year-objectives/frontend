@@ -1,21 +1,84 @@
 <mat-card class="card-container">
-  <h1 class="page-title">Create New Account</h1>
-  <mat-divider></mat-divider>
-  @if (formGroup) {
+  <h1 class="page-title">New Account</h1>
   <mat-card-content class="form-container">
-    <form (ngSubmit)="submitForm()">
-      <app-name-field class="form-field" [nameFormControl]="nameFormControl" />
-      <app-username-field
-        class="form-field"
-        [usernameFormControl]="usernameFormControl"
-      />
-      <app-password-field
-        class="form-field"
-        [passwordFormControl]="passwordFormControl"
-      />
-    </form>
+    <div>
+      <mat-form-field class="form-field">
+        <mat-label>First name</mat-label>
+        <input matInput type="text" [field]="signUpForm.first_name" />
+        @if (
+          signUpForm.first_name().touched() && signUpForm.first_name().invalid()
+        ) {
+          <mat-error>
+            {{ signUpForm.first_name().errors()[0].message }}
+          </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Last name</mat-label>
+        <input matInput type="text" [field]="signUpForm.last_name" />
+        @if (
+          signUpForm.last_name().touched() && signUpForm.last_name().invalid()
+        ) {
+          <mat-error>
+            {{ signUpForm.last_name().errors()[0].message }}
+          </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="form-field">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" [field]="signUpForm.username" />
+        @if (
+          signUpForm.username().touched() && signUpForm.username().invalid()
+        ) {
+          <mat-error>
+            {{ signUpForm.username().errors()[0].message }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          type="email"
+          [field]="signUpForm.email"
+          placeholder="user@email.com"
+        />
+        @if (signUpForm.email().touched() && signUpForm.email().invalid()) {
+          <mat-error>
+            {{ signUpForm.email().errors()[0].message }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hidePassword() ? 'password' : 'text'"
+          [field]="signUpForm.password"
+        />
+        <button
+          matIconButton
+          matSuffix
+          (click)="showPassword($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hidePassword()"
+        >
+          <mat-icon>{{
+            hidePassword() ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </button>
+        @if (
+          signUpForm.password().touched() && signUpForm.password().invalid()
+        ) {
+          <mat-error>
+            {{ signUpForm.password().errors()[0].message }}
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
   </mat-card-content>
-  }
 
   <div class="sign-up-container">
     <button
@@ -23,6 +86,7 @@
       class="sign-up-button"
       mat-flat-button
       (click)="submitForm()"
+      [disabled]="signUpForm().invalid()"
     >
       Create
     </button>

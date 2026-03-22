@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>New objective</h2>
+
+<mat-dialog-content class="form-container">
+  <mat-form-field>
+    <mat-label>Period</mat-label>
+    <mat-select [field]="objectiveForm.period">
+      @for (period of possiblePeriodTypes; track period) {
+        <mat-option [value]="period">{{ period }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Description</mat-label>
+    <input matInput type="text" [field]="objectiveForm.description" />
+    @if (
+      objectiveForm.description().touched() &&
+      objectiveForm.description().invalid()
+    ) {
+      <mat-error>{{
+        objectiveForm.description().errors()[0].message
+      }}</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Number of occurrences</mat-label>
+    <input matInput type="number" [field]="objectiveForm.numberOfOccurrences" />
+    @if (
+      objectiveForm.numberOfOccurrences().touched() &&
+      objectiveForm.numberOfOccurrences().invalid()
+    ) {
+      <mat-error>{{
+        objectiveForm.numberOfOccurrences().errors()[0].message
+      }}</mat-error>
+    }
+  </mat-form-field>
+  <mat-checkbox [field]="objectiveForm.isReversible">Reversible</mat-checkbox>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button matButton mat-dialog-close>Cancel</button>
+  <button
+    matButton
+    (click)="submitNewObjective()"
+    [disabled]="objectiveForm().invalid()"
+    cdkFocusInitial
+  >
+    Create
+  </button>
+</mat-dialog-actions>

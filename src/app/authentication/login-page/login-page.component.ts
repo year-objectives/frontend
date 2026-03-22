@@ -1,68 +1,66 @@
-import { Component, inject, OnInit } from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
+import { Component, inject, signal } from '@angular/core';
+import { Field, form, required } from '@angular/forms/signals';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatInputModule } from '@angular/material/input';
 import { Router, RouterLink } from '@angular/router';
-import {
-  createUsernameFormControl,
-  createPasswordFormControl,
-  UsernameFieldComponent,
-  PasswordFieldComponent,
-} from '../field-components/field-components.component';
-import { AuthenticationService } from '../authentication.service';
+import { AuthenticationService } from '../services/authentication.service';
+import { MatIconModule } from '@angular/material/icon';
+import { UserLoginRequestDto } from '../dtos/user-login-request-dto';
 
 @Component({
   selector: 'app-login-page',
   imports: [
     MatInputModule,
-    ReactiveFormsModule,
-    FormsModule,
     MatButtonModule,
     MatDividerModule,
     MatCardModule,
+    MatIconModule,
     RouterLink,
-    UsernameFieldComponent,
-    PasswordFieldComponent,
+    Field,
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
 })
-export class LoginPageComponent implements OnInit {
-  private authenticationService: AuthenticationService = inject(
-    AuthenticationService
-  );
+export class LoginPageComponent {
+  private authenticationService = inject(AuthenticationService);
   private router = inject(Router);
 
-  usernameFormControl: FormControl = createUsernameFormControl();
-  passwordFormControl: FormControl = createPasswordFormControl();
+  protected hidePassword = signal(true);
 
-  formGroup: FormGroup | any = null;
+  protected loginModel = signal<UserLoginRequestDto>({
+    username: '',
+    password: '',
+  });
 
-  ngOnInit(): void {
-    this.formGroup = new FormGroup({
-      usernameFieldControl: this.usernameFormControl,
-      passwordFormControl: this.passwordFormControl,
-    });
+  protected loginForm = form(this.loginModel, (schemaPath) => {
+    // Email validations
+    required(schemaPath.username, { message: 'Username is required' });
+
+    // Password validations
+    required(schemaPath.password, { message: 'Password is required' });
+  });
+
+  showPassword(event: MouseEvent) {
+    this.hidePassword.set(!this.hidePassword());
+    event.stopPropagation();
   }
 
   submitForm(): void {
-    // Get the username value and passwords, encrypt the password and send it to services.
-    // For now, just go forward with whatever user it is.
+    this.authenticationService.login(this.loginForm().value()).subscribe({
+      next: () => {
+        this.resetForm();
+        this.router.navigate(['/objectives']);
+      },
+    });
+  }
 
-    let isRegistered = this.authenticationService.getUserByEmail(
-      this.formGroup.getRawValue()?.usernameFieldControl
-    );
-
-    if (isRegistered) {
-      this.router.navigate(['/objectives', isRegistered.id]);
-    }
-    // Else _> Toast with error?
+  private resetForm() {
+    this.loginForm().reset();
+    this.loginModel.set({
+      username: '',
+      password: '',
+    });
   }
 }

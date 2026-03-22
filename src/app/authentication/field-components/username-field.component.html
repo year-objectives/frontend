@@ -7,10 +7,13 @@
     [formControl]="usernameFormControl()"
     placeholder="user@email.com"
   />
-  @if (usernameFormControl().hasError('email') &&
-  !usernameFormControl().hasError('required')) {
-  <mat-error>Please enter a valid email address</mat-error>
-  } @if (usernameFormControl().hasError('required')) {
-  <mat-error>Username is <strong>required</strong></mat-error>
+  @if (
+    usernameFormControl().hasError("email") &&
+    !usernameFormControl().hasError("required")
+  ) {
+    <mat-error>Please enter a valid email address</mat-error>
+  }
+  @if (usernameFormControl().hasError("required")) {
+    <mat-error>Username is <strong>required</strong></mat-error>
   }
 </mat-form-field>

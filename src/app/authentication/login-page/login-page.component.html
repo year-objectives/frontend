@@ -1,20 +1,43 @@
 <mat-card class="card-container">
   <h1 class="page-title">Yearly objectives</h1>
-  <mat-divider></mat-divider>
-  @if (formGroup) {
   <mat-card-content class="form-container">
-    <form>
-      <app-username-field
-        class="form-field"
-        [usernameFormControl]="usernameFormControl"
-      />
-      <app-password-field
-        class="form-field"
-        [passwordFormControl]="passwordFormControl"
-      />
-    </form>
+    <div>
+      <mat-form-field class="form-field">
+        <mat-label>Username</mat-label>
+        <input matInput type="text" [field]="loginForm.username" />
+        @if (loginForm.username().touched() && loginForm.username().invalid()) {
+          <mat-error>
+            {{ loginForm.username().errors()[0].message }}
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="form-field">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [type]="hidePassword() ? 'password' : 'text'"
+          [field]="loginForm.password"
+        />
+        <button
+          matIconButton
+          matSuffix
+          (click)="showPassword($event)"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hidePassword()"
+        >
+          <mat-icon>{{
+            hidePassword() ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </button>
+        @if (loginForm.password().touched() && loginForm.password().invalid()) {
+          <mat-error>
+            {{ loginForm.password().errors()[0].message }}
+          </mat-error>
+        }
+      </mat-form-field>
+    </div>
   </mat-card-content>
-  }
 
   <div class="sign-up-container">
     <button
@@ -22,11 +45,13 @@
       class="sign-up-button"
       mat-flat-button
       (click)="submitForm()"
+      [disabled]="loginForm().invalid()"
     >
-      Sign up
+      Login
     </button>
+
     <div class="sign-up-buttons-links">
-      <button mat-button>Reset password</button>
+      <button mat-button disabled>Reset password</button>
       <mat-divider [vertical]="true"></mat-divider>
       <a mat-button routerLink="/create-account">Create account</a>
     </div>
